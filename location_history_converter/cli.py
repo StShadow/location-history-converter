@@ -8,6 +8,7 @@ Be creative! do whatever you want!
 - Import things from your .base module
 """
 import argparse
+import logging
 
 def main():  # pragma: no cover
     """
@@ -25,8 +26,21 @@ def main():  # pragma: no cover
         * List all available tasks
         * Run an application (Flask, FastAPI, Django, etc.)
     """
+    logging.basicConfig(level=logging.DEBUG)
+    
     parser = argparse.ArgumentParser()
-    parser.add_argument("--geodata-file", help="the custom data source must be comma-separated with a header like in geonames cities1000.csv file")
-    parser.add_argument("--location-file", help="the file with location history")
-    parser.parse_args()
+    parser.add_argument("--geodata-file",
+                        help= ("the custom data source must be comma-separated"
+                               "with a header like in geonames cities1000.csv"
+                               "file"))
+    parser.add_argument("--location-file",
+                        help="the file with location history")
+    args = parser.parse_args()
+    dump_args(args)
     print("This will do something")
+
+def dump_args(args):
+    for arg in vars(args):
+        # , getattr(args, arg)
+        value = getattr(args, arg)
+        logging.info("%s=%s" % (arg, value))
