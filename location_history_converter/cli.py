@@ -7,7 +7,7 @@ Be creative! do whatever you want!
 - Start a web application
 - Import things from your .base module
 """
-
+import argparse
 
 def main():  # pragma: no cover
     """
@@ -25,4 +25,8 @@ def main():  # pragma: no cover
         * List all available tasks
         * Run an application (Flask, FastAPI, Django, etc.)
     """
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--geodata-file", help="the custom data source must be comma-separated with a header like in geonames cities1000.csv file")
+    parser.add_argument("--location-file", help="the file with location history")
+    parser.parse_args()
     print("This will do something")
