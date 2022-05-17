@@ -10,6 +10,7 @@ Be creative! do whatever you want!
 import argparse
 import logging
 
+
 def main():  # pragma: no cover
     """
     The main function executes on commands:
@@ -27,20 +28,20 @@ def main():  # pragma: no cover
         * Run an application (Flask, FastAPI, Django, etc.)
     """
     logging.basicConfig(level=logging.DEBUG)
-    
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--geodata-file",
-                        help= ("the custom data source must be comma-separated"
+                        help = ("the custom data source must be comma-separated"
                                "with a header like in geonames cities1000.csv"
                                "file"))
     parser.add_argument("--location-file",
-                        help="the file with location history")
+                        help = "the file with location history")
     args = parser.parse_args()
     dump_args(args)
     print("This will do something")
 
+
 def dump_args(args):
     for arg in vars(args):
-        # , getattr(args, arg)
         value = getattr(args, arg)
-        logging.info("%s=%s" % (arg, value))
+        logging.debug("%s=%s" % (arg, value))
