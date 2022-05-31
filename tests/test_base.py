@@ -1,6 +1,10 @@
 import location_history_converter.base as base
-import tempfile
-from _pytest.tmpdir import tmp_path
+import pytest
+import csv
+from sortedcontainers import SortedDict
+from datetime import date
+import os
+import logging
 
 
 def test_base():
@@ -21,13 +25,40 @@ def test_init_customer_geocoder(tmp_path):
     )
     print(tmp_file.name)
     geocoder = base.init_geocoder(tmp_file)
-    assert geocoder.name == "CustomerGeocoder"
+    assert geocoder.name == "CustomGeocoder"
 
 
-#    with tempfile.NamedTemporaryFile() as tmp:
-#        print(tmp.name)
-#        tmp.write(b'this is some content')
-#        tmp.flush()
-#        tmp.seek(0)
-#        geocoder = base.init_geocoder(tmp.name)
-#        assert geocoder.__name__ == "Object"
+def test_dump_history_to_csv_when_no_file():
+    with pytest.raises(Exception):
+        base.dump_history_to_csv(None, None)
+
+
+def test_dump_history_to_csv_when_random_order(tmp_path):
+    tmp_file = tmp_path / "myfile"
+
+    csv_rowlist = [
+        ["Date", "Country"],
+        ["2022-01-05", "PL"],
+        ["2022-02-03", "CZ"],
+        ["2022-05-03", "SK"],
+    ]
+
+    history = SortedDict(
+        {
+            date(2022, 1, 5): "PL",
+            date(2022, 5, 3): "SK",
+            date(2022, 2, 3): "CZ",
+        }
+    )
+    base.dump_history_to_csv(history, tmp_file)
+
+    assert os.path.getsize(tmp_file) > 0
+
+    with open(tmp_file, "r") as file:
+        reader = csv.reader(file)
+        rows = 0
+        for idx, row in enumerate(reader):
+            logging.debug(row)
+            assert row[1] == csv_rowlist[idx][1]
+            rows = rows + 1
+        assert rows == len(csv_rowlist)

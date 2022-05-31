@@ -12,8 +12,12 @@ If you want to replace this with a Flask application run:
 
 and then choose `flask` as template.
 """
-import reverse_geocoder as rg
+import csv
 import io
+import logging
+
+import reverse_geocoder as rg
+from sortedcontainers import SortedDict
 
 # example constant variable
 NAME = "location_history_converter"
@@ -36,10 +40,11 @@ So, long story short:
 def init_geocoder(geocode_filename=None):
 
     if geocode_filename is None:
+        logging.info("Default geocoder will be used")
         return rg
     else:
         geocoder = Object()
-        geocoder.name = "CustomerGeocoder"
+        geocoder.name = "CustomGeocoder"
         geo = rg.RGeocoder(
             mode=2,
             verbose=True,
@@ -48,7 +53,22 @@ def init_geocoder(geocode_filename=None):
             ),
         )
         geocoder.search = geo.query
+        logging.info(
+            "Custom geocoder will be used (source file %s)"
+            % (geocode_filename)
+        )
         return geocoder
+
+
+def dump_history_to_csv(history: SortedDict, output_file_name: str):
+    if output_file_name is None or history is None:
+        raise ValueError("Not all parameters are valid")
+    else:
+        with open(output_file_name, "w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(["Date", "Country"])
+            for key, value in history.items():
+                writer.writerow([str(key), value])
 
 
 class Object(object):
