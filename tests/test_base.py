@@ -7,6 +7,12 @@ import os
 import logging
 
 
+@pytest.fixture(autouse=True)
+def run_around_tests():
+    logging.basicConfig(level=logging.DEBUG)
+    yield
+
+
 def test_base():
     assert base.NAME == "location_history_converter"
 
@@ -62,3 +68,13 @@ def test_dump_history_to_csv_when_random_order(tmp_path):
             assert row[1] == csv_rowlist[idx][1]
             rows = rows + 1
         assert rows == len(csv_rowlist)
+
+
+@pytest.mark.skip(reason="No way of currently testing multiprocessing code")
+def test_coordinates_to_country():
+    geocoder = base.init_geocoder()
+    lat = 414039706
+    lon = 21993300
+    country = base.coordinates_to_country(lat, lon, geocoder)
+
+    assert country == "ES"

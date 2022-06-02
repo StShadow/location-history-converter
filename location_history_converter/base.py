@@ -16,11 +16,15 @@ import csv
 import io
 import logging
 
+import ijson
 import reverse_geocoder as rg
 from sortedcontainers import SortedDict
 
 # example constant variable
 NAME = "location_history_converter"
+
+# the way how google converts float coordinates to integer - multiple by 10e6
+MULTIPLIER = 10e6
 
 """
 So, long story short:
@@ -33,7 +37,6 @@ So, long story short:
 4. reverse coordinates one-by-one
 4.1 reverse only first coordinate this day and skip the rest
 4.2 add to map day<->country
-5. dump map to a csv file
 """
 
 
@@ -60,6 +63,11 @@ def init_geocoder(geocode_filename=None):
         return geocoder
 
 
+"""
+5. dump map to a csv file
+"""
+
+
 def dump_history_to_csv(history: SortedDict, output_file_name: str):
     if output_file_name is None or history is None:
         raise ValueError("Not all parameters are valid")
@@ -69,6 +77,23 @@ def dump_history_to_csv(history: SortedDict, output_file_name: str):
             writer.writerow(["Date", "Country"])
             for key, value in history.items():
                 writer.writerow([str(key), value])
+
+
+def history_to_dict(history_file, geocoder):
+    """
+    1. read record
+    2. extract date
+    3. extract country
+    """
+    pass
+
+
+def coordinates_to_country(lat, lon, geocoder) -> str:
+    norm_lat = lat / MULTIPLIER
+    norm_lon = lon / MULTIPLIER
+    address = geocoder.search((norm_lat, norm_lon))
+    logging.debug(address)
+    return address[0].get("cc")
 
 
 class Object(object):
