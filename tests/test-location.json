@@ -1,0 +1,18 @@
+{
+	"locations": [
+		{
+			"latitudeE7": 414216106,
+			"longitudeE7": 21684775,
+			"accuracy": 0,
+			"source": "manual",
+			"timestamp": "2011-07-06T18:11:53.189Z"
+		},
+	    {
+			"latitudeE7": 414216106,
+			"longitudeE7": 22684775,
+			"accuracy": 0,
+			"source": "manual",
+			"timestamp": "2011-07-07T18:11:53.189Z"
+	    }
+	]
+}

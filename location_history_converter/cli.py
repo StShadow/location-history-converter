@@ -10,6 +10,8 @@ Be creative! do whatever you want!
 import argparse
 import logging
 
+import location_history_converter.base as base
+
 
 def main():  # pragma: no cover
     """
@@ -27,7 +29,7 @@ def main():  # pragma: no cover
         * List all available tasks
         * Run an application (Flask, FastAPI, Django, etc.)
     """
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -39,11 +41,34 @@ def main():  # pragma: no cover
         ),
     )
     parser.add_argument(
-        "--location-file", help="the file with location history"
+        "--location-file", help="the file with location history", required=True
+    )
+    parser.add_argument(
+        "--output-file",
+        help="the file where to put results, otherwise output.csv",
+    )
+    parser.add_argument(
+        "--verbose",
+        help="DEBUG logging level",
+        action=argparse.BooleanOptionalAction,
     )
     args = parser.parse_args()
     dump_args(args)
-    print("This will do something")
+
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
+
+    geocoder = base.init_geocoder(args.geodata_file)
+
+    result = base.history_to_dict(args.location_file, geocoder)
+
+    outfile = (
+        args.output_file if args.output_file is not None else "output.csv"
+    )
+
+    base.dump_history_to_csv(result, outfile)
+
+    logging.info("Done!")
 
 
 def dump_args(args):

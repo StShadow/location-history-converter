@@ -5,6 +5,7 @@ from sortedcontainers import SortedDict
 from datetime import date
 import os
 import logging
+import ijson
 
 
 @pytest.fixture(autouse=True)
@@ -68,6 +69,18 @@ def test_dump_history_to_csv_when_random_order(tmp_path):
             assert row[1] == csv_rowlist[idx][1]
             rows = rows + 1
         assert rows == len(csv_rowlist)
+
+
+FIXTURE_DIR = os.path.join(os.path.realpath(__file__), "..")
+
+
+@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, "test-location.json"))
+def test_record_to_dictionary_item_conversion(datafiles):
+    for file in datafiles.listdir():
+        with open(file, "rb") as f:
+            for record in ijson.items(f, "locations.item"):
+                date = record["timestamp"][0:10]
+                assert date.startswith("2011") == True
 
 
 @pytest.mark.skip(reason="No way of currently testing multiprocessing code")

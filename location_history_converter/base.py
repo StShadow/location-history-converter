@@ -15,6 +15,7 @@ and then choose `flask` as template.
 import csv
 import io
 import logging
+from datetime import datetime
 
 import ijson
 import reverse_geocoder as rg
@@ -85,7 +86,20 @@ def history_to_dict(history_file, geocoder):
     2. extract date
     3. extract country
     """
-    pass
+    date_to_country = SortedDict()
+    already_processed = set()
+    with open(history_file, "rb") as f:
+        for record in ijson.items(f, "locations.item"):
+            date_str = record["timestamp"][0:10]
+            if not date_str in already_processed:
+                already_processed.add(date_str)
+                date = datetime.strptime(date_str, "%Y-%m-%d").date()
+                lat = int(record["latitudeE7"])
+                lon = int(record["longitudeE7"])
+                country = coordinates_to_country(lat, lon, geocoder)
+                date_to_country[date] = country
+                logging.info("Process day %s" % (date_str))
+    return date_to_country
 
 
 def coordinates_to_country(lat, lon, geocoder) -> str:
@@ -97,4 +111,8 @@ def coordinates_to_country(lat, lon, geocoder) -> str:
 
 
 class Object(object):
+    pass
+
+
+def convert_location(record, geocoder):
     pass
