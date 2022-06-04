@@ -94,6 +94,20 @@ def test_history_to_2_arrays(datafiles):
         assert date.year == 2011
 
 
+def test_index_magic():
+    BATCH = 2
+    dates = (0, 0, 0, 0, 0)
+    start = 0
+    count = 0
+    while start < len(dates):
+        end = start + BATCH if start + BATCH < len(dates) else len(dates)
+        logging.info("Process slice %s %s" % (start, end))
+        tmp_dates = dates[start:end]
+        count = count + len(tmp_dates)
+        start = end
+    assert count == len(dates)
+
+
 @pytest.mark.skip(reason="No way of currently testing multiprocessing code")
 def test_coordinates_to_country():
     geocoder = base.init_geocoder()

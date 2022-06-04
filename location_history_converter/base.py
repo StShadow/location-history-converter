@@ -119,6 +119,7 @@ def arrays_to_dictionary(dates: list, locations: list, geocoder) -> SortedDict:
 
         start = end
     logging.info("Finish processing locations")
+    return date_to_country
 
 
 def coordinates_to_country(latlon: list, geocoder) -> list:
