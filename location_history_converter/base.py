@@ -121,7 +121,7 @@ def arrays_to_dictionary(dates: list, locations: list, geocoder) -> SortedDict:
     logging.info("Finish processing locations")
 
 
-def coordinates_to_country(latlon: list, geocoder) -> str:
+def coordinates_to_country(latlon: list, geocoder) -> list:
     addresses = geocoder.search(latlon)
     return list(map(lambda address: address.get("cc"), addresses))
 
