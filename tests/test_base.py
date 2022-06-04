@@ -83,6 +83,16 @@ def test_record_to_dictionary_item_conversion(datafiles):
                 assert date.startswith("2011") == True
 
 
+@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, "test-location.json"))
+def test_history_to_2_arrays(datafiles):
+    file = datafiles.listdir()[0]
+    (dates, locations) = base.history_to_arrays(file)
+    assert len(dates) == 2
+    assert len(locations) == 2
+    assert len(locations[0]) == 2
+    for date in dates:
+        assert date.year == 2011
+
 @pytest.mark.skip(reason="No way of currently testing multiprocessing code")
 def test_coordinates_to_country():
     geocoder = base.init_geocoder()
