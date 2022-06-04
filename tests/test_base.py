@@ -93,6 +93,7 @@ def test_history_to_2_arrays(datafiles):
     for date in dates:
         assert date.year == 2011
 
+
 @pytest.mark.skip(reason="No way of currently testing multiprocessing code")
 def test_coordinates_to_country():
     geocoder = base.init_geocoder()

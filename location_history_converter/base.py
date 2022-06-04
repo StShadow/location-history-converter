@@ -107,7 +107,7 @@ def arrays_to_dictionary(dates: list, locations: list, geocoder) -> SortedDict:
     BATCH = 64
     start = 0
     date_to_country = SortedDict()
-    while (start < len(dates)):
+    while start < len(dates):
         end = start + BATCH if start + BATCH < len(dates) else len(dates)
         logging.info("Process slice %s %s" % (start, end))
         tmp_dates = dates[start:end]
