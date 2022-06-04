@@ -5,6 +5,7 @@ flake8
 black
 isort
 pytest-cov
+pytest-datafiles
 codecov
 mypy
 gitchangelog
