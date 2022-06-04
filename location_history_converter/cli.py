@@ -64,7 +64,9 @@ def main():  # pragma: no cover
 
     geocoder = base.init_geocoder(args.geodata_file)
 
-    result = base.history_to_dict(args.location_file, geocoder)
+    (dates, locations) = base.history_to_arrays(args.location_file)
+
+    result = base.arrays_to_dictionary(dates, locations, geocoder)
 
     outfile = (
         args.output_file if args.output_file is not None else "output.csv"
