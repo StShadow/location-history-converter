@@ -11,3 +11,4 @@ gitchangelog
 mkdocs
 reverse_geocoder
 sortedcontainers
+ijson
